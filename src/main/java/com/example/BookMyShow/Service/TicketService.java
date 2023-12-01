@@ -4,6 +4,8 @@ import com.example.BookMyShow.Models.*;
 import com.example.BookMyShow.Repository.*;
 import com.example.BookMyShow.RequestDtos.BookTicketRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,6 +27,8 @@ public class TicketService {
 
     @Autowired
     private TicketRepository ticketRepository;
+    @Autowired
+    private JavaMailSender mailSender;
 
     public String bookTicket(BookTicketRequest bookTicketRequest){
 
@@ -61,12 +65,25 @@ public class TicketService {
 
         ticketRepository.save(ticket);
 
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+
+        String body = "Hi cinephile!" +
+                " You have successfully booked your movie ticket for the movie "+bookTicketRequest.getMovieName();
+
+        mailMessage.setFrom("pearl@gmail.com");
+       // User user1 =
+        mailMessage.setTo(user.getEmailId());
+        mailMessage.setSubject("Movie ticket booking !!");
+        mailMessage.setText(body);
+
+        mailSender.send(mailMessage);
+
 
         return "Ticket has been booked";
 
         //Calculate total Price
 
-        //We also need to add it to list of booked tickets against user
+        //We also need to add it to list of booked tickets against userxirjvegdybdkcgzr
 
 
 
